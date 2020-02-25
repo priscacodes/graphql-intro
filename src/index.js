@@ -6,6 +6,8 @@ const typeDefs = `
   type Query {
       hello: String!
       name: String!
+      location: String!
+      bio: String!
   }
 `
 
@@ -17,6 +19,12 @@ const resolvers = {
         },
         name() {
             return 'Ayo'
+        },
+        location() {
+            return 'Eket Akwa Ibom';
+        },
+        bio() {
+            return 'I eat and sleep with bugs'
         }
     }
 }
