@@ -8,43 +8,52 @@ import { GraphQLServer } from 'graphql-yoga';
 // putting ! at the end of our type means we are going to always get back a string.
 const typeDefs = `
   type Query {
+      greeting(name: String, position: String): String!
+      me: User!
+      post: Post!
+  }
+  type User {
       id: ID!
-      hello: String!
       name: String!
-      location: String!
-      bio: String!
-      employed: Boolean!
-      gpa: Float
-      age: Int!
+      email: String!
+      age: Int
+  }
+  type Post {
+      id: ID!
+      title: String!
+      body: String!
+      published: Boolean!
   }
 `
 
 // resolvers are functions that get called when a query is made. each query with it's own function.
 const resolvers = {
     Query: {
-        id() {
-            return 'abc1234ghtyru556llkklkljkj5';
+        greeting(parent, args, ctx, info){ // the parent parameter contains relationships in relational db, args are the arguments passed in from the clients query , ctx is context that is passed across an app, info is information about the query
+            console.log(args);
+            if (args.name && args.position) {
+                return `Hello ${args.name} you are my favorite ${args.position}`
+            } else {
+                return 'Hello anonymous'
+            }
         },
-        age() {
-            return 26;
-        },
-        hello() {
-            return 'This is the first query';
-        },
-        name() {
-            return 'Ayo'
-        },
-        location() {
-            return 'Eket Akwa Ibom';
-        },
-        bio() {
-            return 'I eat and sleep with bugs'
-        },
-        gpa() {
-            return null;
-        }
+       me() {
+           return {
+               id: 'askkjjk57878jfdshj',
+               name:'Ayooluwa',
+               email: 'ayooluwa@email.com'
+           }
+       },
+       post() {
+            return {
+                id: 'dfjhfja4af987d9f79d9av8',
+                title: 'My first post',
+                body: 'This is the body of the post',
+                published: true,
+            }
+       }
     }
-}
+};
 
 const server = new GraphQLServer(
     {
