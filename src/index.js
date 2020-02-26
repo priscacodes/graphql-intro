@@ -1,6 +1,26 @@
 import { GraphQLServer } from 'graphql-yoga';
 
-
+// demo users data 
+const demoUsers = [
+    {
+        id: 'jkfkjkjkrfvv24',
+        age: 26,
+        name: 'Ayooluwa',
+        email: 'ayo@email.com'
+    },
+    {
+        id: 'jkjkdhgchddcnbnn4',
+        age: 26,
+        name: 'Toyin',
+        email: 'Toyin@email.com'
+    },
+    {
+        id: 'jkjkdhgchddclldlkd99934878',
+        age: 26,
+        name: 'Moyin',
+        email: 'Moyin@email.com'
+    }
+]
 // scalar type this are types that store single values
 // String, Boolean, Int, Float, ID
 
@@ -11,6 +31,7 @@ const typeDefs = `
       greeting(name: String, position: String): String!
       me: User!
       post: Post!
+      users(query: String): [User!]!
   }
   type User {
       id: ID!
@@ -30,7 +51,6 @@ const typeDefs = `
 const resolvers = {
     Query: {
         greeting(parent, args, ctx, info){ // the parent parameter contains relationships in relational db, args are the arguments passed in from the clients query , ctx is context that is passed across an app, info is information about the query
-            console.log(args);
             if (args.name && args.position) {
                 return `Hello ${args.name} you are my favorite ${args.position}`
             } else {
@@ -51,6 +71,14 @@ const resolvers = {
                 body: 'This is the body of the post',
                 published: true,
             }
+       },
+       users(parent, args, ctx, info) {
+        if (!args.query) {
+            return demoUsers;
+        } 
+        return demoUsers.filter((x) => { 
+            return x.name.toLowerCase().includes(args.query.toLowerCase())
+        });  
        }
     }
 };
