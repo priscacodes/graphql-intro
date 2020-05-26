@@ -1,0 +1,107 @@
+# // scalar type this are types that store single values
+# // String, Boolean, Int, Float, ID
+
+# // define types (schema)
+# // putting ! at the end of our type means we are going to always get back a data type.
+
+# // mutations allows users to interact with the server and make changes to data
+# // when you create a mutation you have to create a resolver for it
+
+# // we can create an input type and use it as arguments instead of writing out the argument in the mutation directly
+# // input types can only have scalar values
+
+type Query {
+      greeting(name: String, position: String): String!
+      me: User!
+      post: Post!
+      users(query: String): [User!]!
+      posts(query: String) : [Post!]!
+      comments: [Comment!]!
+  }
+
+  
+  type Mutation { 
+    createUser(data: CreateUserInput!): User!
+    deleteUser(id: ID!): User!
+    updateUser(id : ID!, data: UpdateUserInput!): User!
+    createPost(data: CreatePostInput!): Post!
+    deletePost(id: ID!):Post!
+    updatePost(id: ID, data: UpdatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
+    deleteComment(id: ID!) :Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input UpdateUserInput {
+      name: String,
+      email: String,
+      age: Int
+  }
+
+  input UpdatePostInput {
+      title: String,
+      body: String,
+      published: Boolean
+  }
+
+  input CreatePostInput {
+      title: String!
+      body: String!
+      published: Boolean!
+      author: ID!
+  }
+
+  input CreateCommentInput {
+    text: String!
+    author: ID!
+    post: ID!
+  }
+
+  type Subscription {
+      comment(postId: ID!): CommentSubscriptionPayload!
+      post : PostSubscriptionPayload!
+  }
+
+  enum MutationType {
+      CREATED
+      UPDATED
+      DELETED
+  }
+  type PostSubscriptionPayload {
+      data: Post!
+      mutation: MutationType!
+  }
+
+   type CommentSubscriptionPayload {
+      data: Comment!
+      mutation: MutationType!
+  }
+
+
+  type User {
+      id: ID!
+      name: String!
+      email: String!
+      age: Int
+      posts: [Post!]
+      comments: [Comment!]
+  }
+  type Post {
+      id: ID!
+      title: String!
+      body: String!
+      published: Boolean!
+      author: User!
+      comments: [Comment!]
+  }
+  type Comment {
+      id: ID!
+      text: String!
+      author: User!
+      post: Post!
+  }
